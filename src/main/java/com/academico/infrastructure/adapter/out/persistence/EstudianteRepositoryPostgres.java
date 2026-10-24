@@ -2,44 +2,16 @@ package com.academico.infrastructure.adapter.out.persistence;
 
 import com.academico.domain.model.Estudiante;
 import com.academico.domain.repository.EstudianteRepository;
+import com.academico.infrastructure.config.ConexionBD;
 
 import java.sql.*;
 import java.util.*;
 
 public class EstudianteRepositoryPostgres implements EstudianteRepository {
 
-    private final String url;
-    private final String usuario;
-    private final String password;
-
-    public EstudianteRepositoryPostgres() {
-        this(
-                System.getenv().getOrDefault(
-                        "DB_URL",
-                        "jdbc:postgresql://localhost:5432/sistema_gestion_academica"
-                ),
-                System.getenv().getOrDefault("DB_USER", "postgres"),
-                System.getenv().getOrDefault("DB_PASSWORD", "12345")
-        );
-    }
-
-    // Constructor adicional para configurar o probar la conexión.
-    public EstudianteRepositoryPostgres(String url, String usuario, String password) {
-        this.url = url;
-        this.usuario = usuario;
-        this.password = password;
-    }
-
+    // Ya no guarda url/usuario/password: se los pide al Singleton
     private Connection conectar() throws SQLException {
-        if (password == null || password.isBlank()) {
-            throw new IllegalStateException(
-                    "Configura la variable de entorno DB_PASSWORD."
-            );
-        }
-
-        return DriverManager.getConnection(
-                url, usuario, password
-        );
+        return ConexionBD.getInstancia().getConexion();
     }
 
 
@@ -50,8 +22,8 @@ public class EstudianteRepositoryPostgres implements EstudianteRepository {
             VALUES (?, ?, ?)
             """;
 
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        // La conexión NO va en el try: es compartida y no debe cerrarse aquí
+        try (PreparedStatement ps = conectar().prepareStatement(sql)) {
 
             ps.setInt(1, estudiante.getId());
             ps.setString(2, estudiante.getNombre());
@@ -76,8 +48,8 @@ public class EstudianteRepositoryPostgres implements EstudianteRepository {
 
         List<Estudiante> estudiantes = new ArrayList<>();
 
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql);
+        // La conexión NO va en el try: es compartida y no debe cerrarse aquí
+        try (PreparedStatement ps = conectar().prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
@@ -105,8 +77,8 @@ public class EstudianteRepositoryPostgres implements EstudianteRepository {
             WHERE id = ?
             """;
 
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        // La conexión NO va en el try: es compartida y no debe cerrarse aquí
+        try (PreparedStatement ps = conectar().prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
@@ -137,8 +109,8 @@ public class EstudianteRepositoryPostgres implements EstudianteRepository {
             WHERE id = ?
             """;
 
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        // La conexión NO va en el try: es compartida y no debe cerrarse aquí
+        try (PreparedStatement ps = conectar().prepareStatement(sql)) {
 
             ps.setString(1, estudiante.getNombre());
             ps.setString(2, estudiante.getCorreo());
@@ -157,8 +129,8 @@ public class EstudianteRepositoryPostgres implements EstudianteRepository {
     public boolean eliminar(int id) {
         String sql = "DELETE FROM estudiantes WHERE id = ?";
 
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        // La conexión NO va en el try: es compartida y no debe cerrarse aquí
+        try (PreparedStatement ps = conectar().prepareStatement(sql)) {
 
             ps.setInt(1, id);
 

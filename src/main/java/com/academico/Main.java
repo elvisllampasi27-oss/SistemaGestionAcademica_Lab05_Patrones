@@ -1,5 +1,6 @@
 package com.academico;
 import com.academico.infrastructure.adapter.out.persistence.EstudianteRepositoryFactory;
+import com.academico.infrastructure.config.ConexionBD;
 import com.academico.presentation.EstudianteUI;
 
 import com.academico.application.service.EstudianteService;
@@ -56,6 +57,7 @@ public class Main {
 
         } while (opcion != 0);
 
+        ConexionBD.cerrarSiExiste(); // libera la conexión única (Singleton)
         sc.close();
     }
 }
