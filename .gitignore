@@ -37,6 +37,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
-### Propios del proyecto ###
+
+### IntelliJ (local) ###
 .idea/
-/out/
+
+### Lab 05 ###
+data/auditoria.log

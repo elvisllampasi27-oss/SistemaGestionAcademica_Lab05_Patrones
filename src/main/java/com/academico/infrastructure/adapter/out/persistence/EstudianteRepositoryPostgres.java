@@ -19,7 +19,7 @@ public class EstudianteRepositoryPostgres implements EstudianteRepository {
                         "jdbc:postgresql://localhost:5432/sistema_gestion_academica"
                 ),
                 System.getenv().getOrDefault("DB_USER", "postgres"),
-                System.getenv("DB_PASSWORD")
+                System.getenv().getOrDefault("DB_PASSWORD", "12345")
         );
     }
 

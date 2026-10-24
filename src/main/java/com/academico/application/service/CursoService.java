@@ -1,42 +1,61 @@
 package com.academico.application.service;
 
-import com.academico.application.port.in.CursoUseCase;
 import com.academico.domain.model.Curso;
-import com.academico.domain.repository.CursoRepository;
+import com.academico.infrastructure.adapter.out.persistence.CursoRepository;
 
 import java.util.List;
 
-public class CursoService implements CursoUseCase {
+public class CursoService {
 
     private final CursoRepository repository;
 
-    // El repositorio llega desde Main (inyeccion de dependencias)
-    public CursoService(CursoRepository repository) {
-        this.repository = repository;
+    public CursoService() {
+        repository = new CursoRepository();
     }
 
-    @Override
-    public boolean registrar(Curso curso) {
-        // RF06: no se permite registrar un ID repetido
-        if (repository.buscarPorId(curso.getId()).isPresent()) {
-            return false;
-        }
-        repository.guardar(curso);
-        return true;
+    public void registrar(Curso curso) {
+
+        List<Curso> cursos = repository.listar();
+
+        cursos.add(curso);
+
+        repository.guardar(cursos);
     }
 
-    @Override
     public List<Curso> listar() {
         return repository.listar();
     }
 
-    @Override
     public boolean actualizar(Curso curso) {
-        return repository.actualizar(curso);
+
+        List<Curso> cursos = repository.listar();
+
+        for (Curso c : cursos) {
+
+            if (c.getId() == curso.getId()) {
+
+                c.setNombre(curso.getNombre());
+                c.setCreditos(curso.getCreditos());
+
+                repository.guardar(cursos);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    @Override
     public boolean eliminar(int id) {
-        return repository.eliminar(id);
+
+        List<Curso> cursos = repository.listar();
+
+        boolean eliminado = cursos.removeIf(c -> c.getId() == id);
+
+        if (eliminado) {
+            repository.guardar(cursos);
+        }
+
+        return eliminado;
     }
 }

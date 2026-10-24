@@ -16,13 +16,8 @@ public class EstudianteService implements EstudianteUseCase {
     }
 
     @Override
-    public boolean registrar(Estudiante estudiante) {
-        // RF06: no se permite registrar un ID repetido
-        if (repository.buscarPorId(estudiante.getId()).isPresent()) {
-            return false;
-        }
+    public void registrar(Estudiante estudiante) {
         repository.guardar(estudiante);
-        return true;
     }
 
     @Override

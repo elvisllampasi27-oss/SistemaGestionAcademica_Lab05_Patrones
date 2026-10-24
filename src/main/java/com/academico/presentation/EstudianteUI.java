@@ -60,11 +60,9 @@ public class EstudianteUI {
 
         Estudiante estudiante =
                 new Estudiante(id, nombre, correo);
-        if (service.registrar(estudiante)) {
-            System.out.println("Estudiante registrado.");
-        } else {
-            System.out.println("Error: ya existe un estudiante con el ID " + id);
-        }
+        service.registrar(estudiante);
+
+        System.out.println("Estudiante registrado.");
 
     }
     private void listar(){

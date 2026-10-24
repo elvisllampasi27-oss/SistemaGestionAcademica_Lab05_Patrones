@@ -4,7 +4,7 @@ import com.academico.domain.model.Estudiante;
 import java.util.List;
 public interface EstudianteUseCase {
 
-    public boolean registrar (Estudiante estudiante);
+    public void registrar (Estudiante estudiante);
 
     public List<Estudiante> listar();
 
