@@ -1,4 +1,7 @@
 package com.academico;
+import com.academico.infrastructure.adapter.out.notification.AuditoriaObserver;
+import com.academico.infrastructure.adapter.out.notification.ConsolaObserver;
+import com.academico.infrastructure.adapter.out.notification.CorreoObserver;
 import com.academico.infrastructure.adapter.out.persistence.EstudianteRepositoryFactory;
 import com.academico.infrastructure.adapter.out.persistence.decorator.LoggingRepositoryDecorator;
 import com.academico.infrastructure.adapter.out.persistence.decorator.ValidacionRepositoryDecorator;
@@ -25,6 +28,11 @@ public class Main {
 
         //2. Nucleo de la aplicacion: caso de uso
         EstudianteService service=new EstudianteService(repository);
+
+        // OBSERVER: el servicio (sujeto) avisará de cada cambio a estos observadores
+        service.suscribir(new ConsolaObserver());
+        service.suscribir(new AuditoriaObserver());
+        service.suscribir(new CorreoObserver());
 
         // presentacion
         EstudianteUI estudianteUI=new EstudianteUI(service);

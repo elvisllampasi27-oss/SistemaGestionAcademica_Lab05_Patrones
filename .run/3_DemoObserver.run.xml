@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="3 DemoObserver" type="Application" factoryName="Application">
+    <envs>
+      <env name="STORAGE_TYPE" value="POSTGRES" />
+      <env name="DB_PASSWORD" value="12345" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.academico.demo.DemoObserver" />
+    <module name="SistemaGestionAcademica" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
