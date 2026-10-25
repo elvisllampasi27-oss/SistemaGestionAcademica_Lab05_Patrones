@@ -1,5 +1,7 @@
 package com.academico;
 import com.academico.infrastructure.adapter.out.persistence.EstudianteRepositoryFactory;
+import com.academico.infrastructure.adapter.out.persistence.decorator.LoggingRepositoryDecorator;
+import com.academico.infrastructure.adapter.out.persistence.decorator.ValidacionRepositoryDecorator;
 import com.academico.infrastructure.config.ConexionBD;
 import com.academico.presentation.EstudianteUI;
 
@@ -13,7 +15,12 @@ public class Main {
     public static void main(String[] args) {
 
         // 1. Adaptador de salida: la fábrica decide JSON o POSTGRES (STORAGE_TYPE)
-        EstudianteRepository repository = EstudianteRepositoryFactory.crear();
+        EstudianteRepository base = EstudianteRepositoryFactory.crear();
+
+        // DECORATOR: se le añaden validación y log SIN modificar la clase original
+        EstudianteRepository repository =
+                new ValidacionRepositoryDecorator(
+                        new LoggingRepositoryDecorator(base));
 
 
         //2. Nucleo de la aplicacion: caso de uso

@@ -58,11 +58,13 @@ public class EstudianteUI {
         System.out.print("Correo: ");
         String correo = sc.nextLine();
 
-        Estudiante estudiante =
-                new Estudiante(id, nombre, correo);
-        service.registrar(estudiante);
-
-        System.out.println("Estudiante registrado.");
+        try {
+            service.registrar(new Estudiante(id, nombre, correo));
+            System.out.println("Estudiante registrado.");
+        } catch (RuntimeException e) {
+            // El decorador de validación rechaza datos inválidos
+            System.out.println("Error: " + e.getMessage());
+        }
 
     }
     private void listar(){
@@ -85,15 +87,15 @@ public class EstudianteUI {
         System.out.print("Nuevo correo: ");
         String correoAct = sc.nextLine();
 
-        boolean actualizado = service.actualizar(
-                new Estudiante(idAct, nombreAct, correoAct)
-        );
-
-        System.out.println(
-                actualizado
-                        ? "Estudiante actualizado."
-                        : "Estudiante no encontrado."
-        );
+        try {
+            boolean actualizado = service.actualizar(
+                    new Estudiante(idAct, nombreAct, correoAct));
+            System.out.println(actualizado
+                    ? "Estudiante actualizado."
+                    : "Estudiante no encontrado.");
+        } catch (RuntimeException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
     private void eliminar(Scanner sc){
         System.out.print("ID a eliminar: ");
